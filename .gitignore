@@ -1,0 +1,4 @@
+*.cfg
+__pycache__/*
+comp_house/Lib/*
+comp_house/Scripts/*
