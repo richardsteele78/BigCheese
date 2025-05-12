@@ -2,7 +2,7 @@ import networkx as nx
 from pyvis.network import Network
 
 def create_CHgraph(company_number, my_df):
-    image_path = r"C:\Github\Sandbox\files\cheese.png"
+    image_path = r"assets/cheese.png"
     G = nx.DiGraph()  # Use a directed graph to represent roles as edges
 
     # Add nodes and edges based on the DataFrame
@@ -37,5 +37,5 @@ def create_CHgraph(company_number, my_df):
     for source, target, data in G.edges(data=True):
         net.add_edge(source, target, label=data['label'])
     # Generate and save the graph
-    net.show(f'temp_html/{company_number}_graph.html')
+    #net.show(f'temp_html/{company_number}_graph.html')
     return net
