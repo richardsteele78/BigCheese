@@ -1,5 +1,12 @@
 import networkx as nx
 from pyvis.network import Network
+import base64
+
+# Convert the image to a Base64 string
+with open("assets/cheese.png", "rb") as img_file:
+    cheese_icon_base64 = base64.b64encode(img_file.read()).decode()
+# Use the Base64 string as the image source
+cheese_icon_path = f"data:image/png;base64,{cheese_icon_base64}"
 
 def create_custom_graph(df):
     # Define colors
@@ -7,6 +14,7 @@ def create_custom_graph(df):
     non_director_color = "rgb(51,96,101)"  # Teal for companies
     vertical_spacing = 100  # Spacing between teal nodes in the vertical line
     horizontal_offset = 200  # Horizontal offset for orange nodes
+#    cheese_icon_path = "assets/cheese.png"  # Path to the cheese icon
 
     # Create a directed graph
     G = nx.DiGraph()
@@ -27,6 +35,9 @@ def create_custom_graph(df):
         # Add an edge between Entity1 and Entity2 with the role as the label
         G.add_edge(row['Entity1'], row['Entity2'], label=row['Role'])
 
+    # Identify the last Entity2 in the DataFrame
+    last_entity2 = df.iloc[-1]['Entity2']
+
     # Create a PyVis network visualization
     net = Network(notebook=True, cdn_resources='remote')
 
@@ -46,7 +57,17 @@ def create_custom_graph(df):
             # Position directors to the side of the vertical line
             x = horizontal_offset if data['color'] == director_color else 0
             y = pos.get(node, (0, 0))[1]  # Keep y-coordinate consistent if already defined
-            net.add_node(node, x=x, y=y, color=data['color'], label=data['label'])
+
+            # Check if the node is a director of the last Entity2
+            if data['color'] == director_color and any(
+                (row['Entity1'] == node and row['Entity2'] == last_entity2) for _, row in df.iterrows()
+            ):
+                # Use the cheese icon for directors of the last Entity2
+                net.add_node(node, x=x, y=y, shape="image", image=cheese_icon_path, label=data['label'])
+            else:
+                net.add_node(node, x=x, y=y, color=data['color'], label=data['label'])
+
+    # Add edges
     for source, target, data in G.edges(data=True):
         net.add_edge(source, target, label=data['label'])
 
