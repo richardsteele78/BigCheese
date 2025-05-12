@@ -58,7 +58,6 @@ def scrape_pwsc(base_url,company_number):
     soup = BeautifulSoup(response.content, 'html.parser')
     # with open("soup_output.txt", "w", encoding="utf-8") as file:
     #     file.write(soup.prettify())
-
     company_header = soup.find('div', class_='company-header')
     element1 = company_header.find('h1', class_='heading-xlarge') if company_header else None
     extracted_name = element1.text.strip() if element1 else "N/A"
@@ -91,21 +90,16 @@ def spider_scrape(base_url, company_number, iterations):
     combined_results = []  # Unified list to store all collected data
     visited_companies = set()  # To avoid revisiting companies
     queue = [company_number]  # Start with the initial company number
-
     # Scrape officers for the top-level company first
     top_level_officers = scrape_officer_details(base_url, company_number)
     combined_results.extend(top_level_officers)
-
     for _ in range(iterations):
         if not queue:
             break  # Stop if there are no more companies to process
-
         current_company = queue.pop(0)
         if current_company in visited_companies:
             continue  # Skip if already visited
-
         visited_companies.add(current_company)
-
         # Collect PWSC details
         pwsc = scrape_pwsc(base_url, current_company)
         if pwsc:
@@ -113,9 +107,7 @@ def spider_scrape(base_url, company_number, iterations):
             # Add the registration number to the queue for further scraping
             if pwsc["Entity2Number"] != "N/A" and pwsc["Entity2Number"] not in visited_companies:
                 queue.append(pwsc["Entity2Number"])
-
             # Collect officer details for the PWSC entity
             officers = scrape_officer_details(base_url, pwsc["Entity2Number"])
             combined_results.extend(officers)
-
     return combined_results
