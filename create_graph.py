@@ -37,5 +37,5 @@ def create_CHgraph(company_no, my_df):
     for source, target, data in G.edges(data=True):
         net.add_edge(source, target, label=data['label'])
     # Generate and save the graph
-    net.show(f'data/{company_no}_graph3.html')
+    net.show(f'{company_no}_graph3.html')
     return net
