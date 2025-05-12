@@ -8,10 +8,10 @@ from create_graph import create_CHgraph
 # Example usage
 base_url = "https://find-and-update.company-information.service.gov.uk"
 
-st.title("Company Information Scraper")
+st.title("Find the big cheese...")
 st.markdown(f"[Companies House:]({base_url})")
 iterations = int(st.number_input("Enter the number of iterations:", min_value=1, max_value=100, value=10))
-company_number = st.text_input("Enter the company number:", value="OC304434")
+company_number = st.text_input("Enter the company number:", value="07978187")
 
 if st.button("Scrape Data"):
     with st.spinner("Scraping data..."):
