@@ -3,7 +3,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 import pandas as pd
 from CH_Scrape import spider_scrape
-from create_graph import create_CHgraph
+from create_graph import create_custom_graph
 
 # Example usage
 base_url = "https://find-and-update.company-information.service.gov.uk"
@@ -24,8 +24,9 @@ if st.button("Scrape Data"):
         pwsc_count = pwsc_df['Entity1'].nunique()
         st.success(f"{count_companies} Companies Identified: {director_count} unique directors & {pwsc_count} controlling interests")
         st.dataframe(combined_df)
-        mynet = create_CHgraph(combined_df)
-        net_html_path = f'temp_html/test_graph.html'
+        print(combined_df)
+        mynet = create_custom_graph(combined_df)
+        net_html_path = f'temp_html/custom_graph.html'
         with open(net_html_path, "r", encoding="utf-8") as f:
             html_content = f.read()
         components.html(html_content, height=750)
