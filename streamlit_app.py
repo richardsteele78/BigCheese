@@ -1,5 +1,6 @@
 #streamlit run streamlit_app.py
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 from CH_Scrape import spider_scrape
 from create_graph import create_CHgraph
@@ -19,5 +20,7 @@ if st.button("Scrape Data"):
         st.success("Data scraped successfully!")
         st.dataframe(combined_df)
         mynet = create_CHgraph(company_number, combined_df)
-        st.graphviz_chart(mynet)
-st.write("Finished")
+        net_html_path = f'temp_html/{company_number}_graph.html'
+        with open(net_html_path, "r", encoding="utf-8") as f:
+            html_content = f.read()
+        components.html(html_content, height=750)
