@@ -1,13 +1,11 @@
 import networkx as nx
 from pyvis.network import Network
 
-image_path = r"assets/cheese.png"
-
 def create_custom_graph(df):
     # Define colors
-    director_color = "rgb(247,122,64)"
-    non_director_color = "rgb(51,96,101)"  # Teal color for non-directors
-    vertical_spacing = 100  # Spacing between blue nodes in the vertical line
+    director_color = "rgb(247,122,64)"  # Orange for directors
+    non_director_color = "rgb(51,96,101)"  # Teal for companies
+    vertical_spacing = 100  # Spacing between teal nodes in the vertical line
     horizontal_offset = 200  # Horizontal offset for orange nodes
 
     # Create a directed graph
@@ -15,20 +13,28 @@ def create_custom_graph(df):
 
     # Add nodes and edges based on the DataFrame
     for idx, row in df.iterrows():
-        # Add Entity1 and Entity2 as nodes
-        G.add_node(row['Entity1'], color=director_color if row['Role'] == 'Director' else non_director_color, label=row['Entity1'])
-        G.add_node(row['Entity2'], color=director_color if row['Role'] == 'Director' else non_director_color, label=row['Entity2'])
+        # Determine the color of Entity1 and Entity2 based on their roles
+        entity1_color = director_color if row['Role'] == 'Director' else non_director_color
+        entity2_color = non_director_color  # Entity2 is always a company (teal)
+
+        # Add Entity1 as a node if it doesn't already exist
+        if row['Entity1'] not in G.nodes:
+            G.add_node(row['Entity1'], color=entity1_color, label=row['Entity1'])
+        # Add Entity2 as a node if it doesn't already exist
+        if row['Entity2'] not in G.nodes:
+            G.add_node(row['Entity2'], color=entity2_color, label=row['Entity2'])
+
         # Add an edge between Entity1 and Entity2 with the role as the label
         G.add_edge(row['Entity1'], row['Entity2'], label=row['Role'])
 
     # Create a PyVis network visualization
     net = Network(notebook=True, cdn_resources='remote')
 
-    # Define positions for blue nodes (non-directors) in a strict vertical line
+    # Define positions for teal nodes (companies) in a strict vertical line
     pos = {}
-    blue_nodes = [node for node, data in G.nodes(data=True) if data['color'] == non_director_color]
-    for i, node in enumerate(reversed(blue_nodes)):  # Reverse to start from the bottom
-        pos[node] = (0, i * vertical_spacing)  # Place blue nodes in a vertical line
+    teal_nodes = [node for node, data in G.nodes(data=True) if data['color'] == non_director_color]
+    for i, node in enumerate(reversed(teal_nodes)):  # Reverse to start from the bottom
+        pos[node] = (0, i * vertical_spacing)  # Place teal nodes in a vertical line
 
     # Apply positions and add nodes to the PyVis network
     for node, (x, y) in pos.items():
