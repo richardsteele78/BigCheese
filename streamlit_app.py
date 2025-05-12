@@ -9,16 +9,16 @@ from create_graph import create_CHgraph
 base_url = "https://find-and-update.company-information.service.gov.uk"
 
 st.title("Find the big cheese...")
-st.markdown(f"[Companies House:]({base_url})")
-iterations = int(st.number_input("Enter the number of iterations:", min_value=1, max_value=100, value=10))
+st.markdown("Input a Company Number from the [Companies House website](https://find-and-update.company-information.service.gov.uk)")
 company_number = st.text_input("Enter the company number:", value="07978187")
+iterations = int(st.number_input("Enter the number of iterations:", min_value=1, max_value=20, value=3))
 
 if st.button("Scrape Data"):
     with st.spinner("Scraping data..."):
         results = spider_scrape(base_url, company_number, iterations)
         combined_df = pd.DataFrame(results)
-        st.success("Data scraped successfully!")
-        st.dataframe(combined_df)
+        #st.success("Data scraped successfully!")
+        print(combined_df)
         mynet = create_CHgraph(company_number, combined_df)
         net_html_path = f'temp_html/{company_number}_graph.html'
         with open(net_html_path, "r", encoding="utf-8") as f:
