@@ -24,8 +24,8 @@ if st.button("Scrape Data"):
         pwsc_count = pwsc_df['Entity1'].nunique()
         st.success(f"{count_companies} Companies Identified: {director_count} unique directors & {pwsc_count} controlling interests")
         st.dataframe(combined_df)
-        mynet = create_CHgraph(company_number, combined_df)
-        net_html_path = f'temp_html/{company_number}_graph.html'
+        mynet = create_CHgraph(combined_df)
+        net_html_path = f'temp_html/test_graph.html'
         with open(net_html_path, "r", encoding="utf-8") as f:
             html_content = f.read()
         components.html(html_content, height=750)
