@@ -66,11 +66,7 @@ def create_custom_graph(df):
                 net.add_node(node, x=x, y=y, shape="image", image=cheese_icon_path, label=data['label'])
             else:
                 net.add_node(node, x=x, y=y, color=data['color'], label=data['label'])
-
     # Add edges
     for source, target, data in G.edges(data=True):
         net.add_edge(source, target, label=data['label'])
-
-    # Generate and save the graph
-    net.show("temp_html/custom_graph.html")
     return net

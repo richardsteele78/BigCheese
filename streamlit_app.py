@@ -10,8 +10,8 @@ base_url = "https://find-and-update.company-information.service.gov.uk"
 
 st.title("Find the big cheese...")
 st.markdown("Input a Company Number from the [Companies House website](https://find-and-update.company-information.service.gov.uk)")
-company_number = st.text_input("Enter the company number:", value="07978187")
-iterations = int(st.number_input("Enter max. number of levels trace up the hierarchy:", min_value=1, max_value=20, value=3))
+company_number = st.text_input("Enter the company number:")
+iterations = int(st.number_input("Enter max. number of levels trace up the hierarchy:", min_value=1, max_value=20, value=5))
 
 if st.button("Scrape Data"):
     with st.spinner("Scraping data..."):
@@ -24,7 +24,5 @@ if st.button("Scrape Data"):
         pwsc_count = pwsc_df['Entity1'].nunique()
         st.success(f"{count_companies-1} Controlling Companies Identified & {director_count} unique directors")
         mynet = create_custom_graph(combined_df)
-        net_html_path = f'temp_html/custom_graph.html'
-        with open(net_html_path, "r", encoding="utf-8") as f:
-            html_content = f.read()
+        html_content = mynet.generate_html()
         components.html(html_content, height=750)
