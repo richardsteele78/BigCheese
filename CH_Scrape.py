@@ -103,7 +103,8 @@ def spider_scrape(base_url, company_number, iterations):
         # Collect PWSC details
         pwsc = scrape_pwsc(base_url, current_company)
         if pwsc:
-            combined_results.append(pwsc)  # Add PWSC details to the combined results
+            if pwsc["Entity1"] != "N/A":
+                combined_results.append(pwsc)  # Add PWSC details to the combined results
             # Add the registration number to the queue for further scraping
             if pwsc["Entity2Number"] != "N/A" and pwsc["Entity2Number"] not in visited_companies:
                 queue.append(pwsc["Entity2Number"])
