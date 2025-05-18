@@ -5,42 +5,44 @@ from bs4 import BeautifulSoup
 pwsc_details = []
 
 def scrape_officer_details(base_url, company_number):
+    officers = []
     # Ensure the company number is always eight characters long with leading zeroes if numeric
     if company_number.isnumeric():
         company_number = company_number.zfill(8)
     else:
         company_number = company_number.upper()    
     url = base_url + f"/company/{company_number.upper()}/officers"
-    response = requests.get(url)
-    if response.status_code != 200:
-        raise RuntimeError(f"Failed to retrieve the base officers page: {url}  Response Code: {response.status_code}")
-    soup = BeautifulSoup(response.content, 'html.parser')
-    company_header = soup.find('div', class_='company-header')
-    company_name_tag = company_header.find('h1', class_='heading-xlarge') if company_header else None
-    company_name = company_name_tag.text.strip().upper() if company_name_tag else "N/A"
-    company_number_tag = company_header.find('p', id='company-number').find('strong') if company_header else None
-    extracted_company_number = company_number_tag.text.strip() if company_number_tag else "N/A"
+    if company_number != "N/A":
+        print(f"***{url}")
+        response = requests.get(url)
+        if response.status_code != 200:
+            raise RuntimeError(f"Failed to retrieve the base officers page: {url}  Response Code: {response.status_code}")
+        soup = BeautifulSoup(response.content, 'html.parser')
+        company_header = soup.find('div', class_='company-header')
+        company_name_tag = company_header.find('h1', class_='heading-xlarge') if company_header else None
+        company_name = company_name_tag.text.strip().upper() if company_name_tag else "N/A"
+        company_number_tag = company_header.find('p', id='company-number').find('strong') if company_header else None
+        extracted_company_number = company_number_tag.text.strip() if company_number_tag else "N/A"
 
-    # with open("soup_output.txt", "w", encoding="utf-8") as file:
-    #     file.write(soup.prettify())
-    officers = []
-    # Find all officer appointments
-    appointments = soup.find_all('div', class_=re.compile(r'appointment-\d+'))
-    for appointment in appointments:
-        # Extract officer details
-        name_tag = appointment.find('span', id=re.compile(r'officer-name-\d+'))
-        name = name_tag.text.strip() if name_tag else "N/A"
-        role_tag = appointment.find('dd', id=re.compile(r'officer-role-\d+'))
-        role = role_tag.text.strip() if role_tag else "N/A"
-        status_tag = appointment.find('span', id=re.compile(r'officer-status-tag-\d+'))
-        status = status_tag.text.strip() if status_tag else "N/A"
-        if status == "Active":
-            officers.append({
-                "Entity1": name,
-                "Role": role,
-                "Entity2": company_name,
-                "Entity2Number": extracted_company_number
-            })
+        # with open("soup_output.txt", "w", encoding="utf-8") as file:
+        #     file.write(soup.prettify())
+        # Find all officer appointments
+        appointments = soup.find_all('div', class_=re.compile(r'appointment-\d+'))
+        for appointment in appointments:
+            # Extract officer details
+            name_tag = appointment.find('span', id=re.compile(r'officer-name-\d+'))
+            name = name_tag.text.strip() if name_tag else "N/A"
+            role_tag = appointment.find('dd', id=re.compile(r'officer-role-\d+'))
+            role = role_tag.text.strip() if role_tag else "N/A"
+            status_tag = appointment.find('span', id=re.compile(r'officer-status-tag-\d+'))
+            status = status_tag.text.strip() if status_tag else "N/A"
+            if status == "Active":
+                officers.append({
+                    "Entity1": name,
+                    "Role": role,
+                    "Entity2": company_name,
+                    "Entity2Number": extracted_company_number
+                })
     return officers  
 
 def scrape_pwsc(base_url,company_number):
