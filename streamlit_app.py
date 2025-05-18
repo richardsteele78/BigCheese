@@ -10,7 +10,7 @@ base_url = "https://find-and-update.company-information.service.gov.uk"
 
 st.title("Find the big cheese...")
 st.markdown("Input a Company Number from the [Companies House website](https://find-and-update.company-information.service.gov.uk)")
-company_number = st.text_input("Enter the company number:")
+company_number = st.text_input("Enter the company number:").strip()
 iterations = int(st.number_input("Enter max. number of levels trace up the hierarchy:", min_value=1, max_value=20, value=5))
 
 if st.button("Scrape Data"):
