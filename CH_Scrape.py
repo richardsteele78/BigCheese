@@ -13,8 +13,7 @@ def scrape_officer_details(base_url, company_number):
     url = base_url + f"/company/{company_number.upper()}/officers"
     response = requests.get(url)
     if response.status_code != 200:
-        print(f"Failed to retrieve the base officers page: {url} : {response.status_code}")
-        return []
+        raise RuntimeError(f"Failed to retrieve the base officers page: {url}  Response Code: {response.status_code}")
     soup = BeautifulSoup(response.content, 'html.parser')
     company_header = soup.find('div', class_='company-header')
     company_name_tag = company_header.find('h1', class_='heading-xlarge') if company_header else None
@@ -53,8 +52,7 @@ def scrape_pwsc(base_url,company_number):
     url = base_url + f"/company/{company_number.upper()}/persons-with-significant-control"
     response = requests.get(url)
     if response.status_code != 200:
-        print(f"Failed to retrieve the base pwsc page: {url}: {response.status_code}")
-        return
+        raise RuntimeError(f"Failed to retrieve the base pwsc page: {url}: {response.status_code}")
     soup = BeautifulSoup(response.content, 'html.parser')
     # with open("soup_output.txt", "w", encoding="utf-8") as file:
     #     file.write(soup.prettify())

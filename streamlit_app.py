@@ -15,14 +15,19 @@ iterations = int(st.number_input("Enter max. number of levels trace up the hiera
 
 if st.button("Scrape Data"):
     with st.spinner("Scraping data..."):
-        results = spider_scrape(base_url, company_number, iterations)
-        combined_df = pd.DataFrame(results)
-        count_companies = combined_df['Entity2'].nunique()
-        director_df = combined_df[combined_df['Role'] == 'Director']
-        pwsc_df = combined_df[combined_df['Role'] == 'pwsc']
-        director_count = director_df['Entity1'].nunique()
-        pwsc_count = pwsc_df['Entity1'].nunique()
-        st.success(f"{count_companies-1} Controlling Companies Identified & {director_count} unique directors")
-        mynet = create_custom_graph(combined_df)
-        html_content = mynet.generate_html()
-        components.html(html_content, height=750)
+        try:
+            results = spider_scrape(base_url, company_number, iterations)
+            combined_df = pd.DataFrame(results)
+            st.dataframe(combined_df)
+            count_companies = combined_df['Entity2'].nunique()
+            director_df = combined_df[combined_df['Role'] == 'Director']
+            pwsc_df = combined_df[combined_df['Role'] == 'pwsc']
+            director_count = director_df['Entity1'].nunique()
+            pwsc_count = pwsc_df['Entity1'].nunique()
+            st.success(f"{count_companies-1} Controlling Companies Identified & {director_count} unique directors")
+            mynet = create_custom_graph(combined_df)
+            html_content = mynet.generate_html()
+            components.html(html_content, height=750)
+        except Exception as e:
+            st.error(f"Please check for valid company number = '{company_number}'")
+            st.error(e)
