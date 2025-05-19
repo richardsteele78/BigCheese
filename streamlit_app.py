@@ -19,6 +19,7 @@ if st.button("Scrape Data"):
         try:
             results = spider_scrape(base_url, company_number, iterations)
             combined_df = pd.DataFrame(results)
+            combined_df['BC_indicator'] = (combined_df['Role'] == 'pwsc') & (combined_df['Entity2Number'] == "N/A")
             combined_df.to_csv('test_output.csv', index=False)
             count_companies = combined_df['Entity2'].nunique()
             director_df = combined_df[combined_df['Role'] == 'Director']
