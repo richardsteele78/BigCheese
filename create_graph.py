@@ -14,10 +14,13 @@ def create_custom_graph(df):
     non_director_color = "rgb(51,96,101)"  # Teal for companies
     vertical_spacing = 100  # Spacing between teal nodes in the vertical line
     horizontal_offset = 200  # Horizontal offset for orange nodes
-#    cheese_icon_path = "assets/cheese.png"  # Path to the cheese icon
 
     # Create a directed graph
     G = nx.DiGraph()
+
+    # Track which nodes should be the cheese icon based on BC_indicator
+    cheese_nodes = set(df.loc[df['BC_indicator'], 'Entity1'])
+    print("Cheese nodes:", cheese_nodes)
 
     # Add nodes and edges based on the DataFrame
     for idx, row in df.iterrows():
@@ -49,7 +52,10 @@ def create_custom_graph(df):
 
     # Apply positions and add nodes to the PyVis network
     for node, (x, y) in pos.items():
-        net.add_node(node, x=x, y=y, color=G.nodes[node]['color'], label=node, fixed={"x": True, "y": True})
+        if node in cheese_nodes:
+            net.add_node(node, x=x, y=y, shape="image", image=cheese_icon_path, label=node, fixed={"x": True, "y": True}, size=40)  # Larger icon for BC_indicator
+        else:
+            net.add_node(node, x=x, y=y, color=G.nodes[node]['color'], label=node, fixed={"x": True, "y": True})
 
     # Add remaining nodes (directors) and edges
     for node, data in G.nodes(data=True):
