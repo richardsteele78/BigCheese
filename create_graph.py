@@ -63,7 +63,7 @@ def create_custom_graph(df):
                 (row['Entity1'] == node and row['Entity2'] == last_entity2) for _, row in df.iterrows()
             ):
                 # Use the cheese icon for directors of the last Entity2
-                net.add_node(node, x=x, y=y, shape="image", image=cheese_icon_path, label=data['label'])
+                net.add_node(node, x=x, y=y, shape="image", image=cheese_icon_path, label=data['label'],size=15)
             else:
                 net.add_node(node, x=x, y=y, color=data['color'], label=data['label'])
     # Add edges
