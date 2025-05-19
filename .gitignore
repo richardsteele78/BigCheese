@@ -3,3 +3,4 @@ __pycache__/*
 comp_house/Lib/*
 comp_house/Scripts/*
 temp_html/*.html
+test_output.csv

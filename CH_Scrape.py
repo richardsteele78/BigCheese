@@ -53,6 +53,7 @@ def scrape_pwsc(base_url,company_number):
         company_number = company_number.upper()
     url = base_url + f"/company/{company_number.upper()}/persons-with-significant-control"
     response = requests.get(url)
+    print(f"*{url}")
     if response.status_code != 200:
         raise RuntimeError(f"Failed to retrieve the base pwsc page: {url}: {response.status_code}")
     soup = BeautifulSoup(response.content, 'html.parser')

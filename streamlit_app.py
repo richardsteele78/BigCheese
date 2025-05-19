@@ -5,6 +5,7 @@ import pandas as pd
 from CH_Scrape import spider_scrape
 from create_graph import create_custom_graph
 
+# 13150985 , 
 # Example usage
 base_url = "https://find-and-update.company-information.service.gov.uk"
 
@@ -18,7 +19,7 @@ if st.button("Scrape Data"):
         try:
             results = spider_scrape(base_url, company_number, iterations)
             combined_df = pd.DataFrame(results)
-            st.dataframe(combined_df)
+            combined_df.to_csv('test_output.csv', index=False)
             count_companies = combined_df['Entity2'].nunique()
             director_df = combined_df[combined_df['Role'] == 'Director']
             pwsc_df = combined_df[combined_df['Role'] == 'pwsc']
